@@ -39,7 +39,7 @@ def check_cards_21(cards_to_check: list, player: bool, ):
     """cards to count, player is boolean"""
     if sum(cards_to_check) == 21:
         if player:
-            print('Congrats, u won!')
+            print('Congrats, u won! ')
         else:
             print('house wins')
         return True
