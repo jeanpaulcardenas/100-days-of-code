@@ -3,6 +3,7 @@ import random
 
 def create_deck():
     cards = [x for x in range(2, 10)] + [11, 10, 10, 10, 10]
+    print(cards)
     deck = cards * 4
 
     return deck
