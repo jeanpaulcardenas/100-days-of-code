@@ -117,7 +117,7 @@ while play:
         while sum(players_hand) >= sum(dealers_hand) < 17:
             print_cards_during_game(players_hand, dealers_hand, True)
             dealers_hand.append(deal_one_card(my_deck))
-            if sum(players_hand) > sum(dealers_hand) > 17:
+            if sum(dealers_hand) > 21 and 11 in dealers_hand:
                 dealers_hand.remove(11)
                 dealers_hand.append(1)
 
