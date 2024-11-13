@@ -2,7 +2,7 @@ import random
 
 
 def create_deck():
-    cards = [x for x in range(1, 10)] + [10, 10, 10, 10]
+    cards = [x for x in range(2, 10)] + [11, 10, 10, 10, 10]
     deck = cards * 4
 
     return deck
@@ -43,6 +43,7 @@ def check_cards_21(cards_to_check: list, player: bool, ):
         else:
             print('house wins')
         return True
+
     else:
         return False
 
@@ -60,12 +61,18 @@ def ask_to_play_again() -> bool:
 
 
 play = True
+results = {
+    True: 'Congrats bruh u won!',
+    False: 'U lost man',
+    'draw': 'its a draw'
+}
 while play:
     print('hi')
-    want_to_play = '',
+    want_to_play = ''
+    player_win = 'draw'
     while want_to_play not in ['Y', 'N']:
         want_to_play = input('Ready? Y/N').upper()
-        print(want_to_play)
+
     if want_to_play == 'N':
         play = False
         break
@@ -77,38 +84,51 @@ while play:
     players_hand = cards_dealt['players_cards']
 
     print_cards_during_game(players_hand, dealers_hand, all_cards=False)
-
+    game_over = False
     if check_cards_21(players_hand, player=True):
         play = ask_to_play_again()
         continue
 
     keep_asking = True
-    while keep_asking:
+    while keep_asking and not game_over:
         request_card = input(f'deal? Y/N').upper()
 
         if request_card == 'Y':
             print('another card has been dealt')
             players_hand.append(deal_one_card(my_deck))
-            print_cards_during_game(players_hand, dealers_hand, all_cards=False)
             if check_cards_21(players_hand, player=True):
-                break
+                game_over = True
+                player_win = True
+
             if sum(players_hand) > 21:
-                print('busted, u lose')
-                break
+                if 11 in players_hand:
+                    players_hand.remove(11)
+                    players_hand.append(1)
+
+                else:
+                    game_over = True
+                    player_win = False
+            print_cards_during_game(players_hand, dealers_hand, False)
+
         else:
             keep_asking = False
-    while sum(players_hand) > sum(dealers_hand) < 17:
-        dealers_hand.append(deal_one_card(my_deck))
-        print_cards_during_game(players_hand, dealers_hand, True)
 
-    if sum(players_hand) > sum(dealers_hand) or sum(dealers_hand) > 21:
-        print('u win')
+    if not game_over:
+        while sum(players_hand) >= sum(dealers_hand) < 17:
+            print_cards_during_game(players_hand, dealers_hand, True)
+            dealers_hand.append(deal_one_card(my_deck))
+            if sum(players_hand) > sum(dealers_hand) > 17:
+                dealers_hand.remove(11)
+                dealers_hand.append(1)
 
-    elif sum(players_hand) < sum(dealers_hand):
-        print('U lose')
+        if sum(players_hand) > sum(dealers_hand) or sum(dealers_hand) > 21:
+            player_win = True
 
-    else:
-        print('Draw')
+        elif sum(players_hand) < sum(dealers_hand):
+            player_win = False
+
+    print_cards_during_game(players_hand, dealers_hand, True)
+    print(results[player_win])
     if not ask_to_play_again():
         play = False
 
